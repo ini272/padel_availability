@@ -1,7 +1,8 @@
 # padel_availability
 
 ## How to install
-- install virtualenv `pip3 install virtualenv --break-system-packages`
+- install virtualenv `pip3 install virtualenv`
+	- use `pip3 install virtualenv --break-system-packages` when using python3.11 or newer
 - create envrionment `python3 -m venv env`
 - activate envrionment `source env/bin/activate`
     - you should now see a "(env)" in your command line
