@@ -27,23 +27,13 @@ def convert_time(date_str, time_str):
     local_time = utc_time.astimezone(local_tz)
     return local_time.strftime("%Y-%m-%d %H:%M:%S")
 
-# Get today's date
-today = datetime.now().date()
-
-# Store the results for all dates
-all_results = {}
-
-# Loop through the next thirteen days
-for i in range(14):
-    # Calculate the current date
-    current_date = today + timedelta(days=i)
-
+def getAvailability(current_date):
     # Set the start and end times for the current date
     start_time = f"{current_date}T00:00:00"
     end_time = f"{current_date}T23:59:59"
 
     # Initialize results for the current date
-    all_results[current_date] = []
+    results = []
 
     # Loop through each venue
     for venue in venues_data['venues']:
@@ -77,22 +67,39 @@ for i in range(14):
                     for slot in court['slots']:
                         local_start_time = convert_time(court['start_date'], slot['start_time'])
                         # Check if start time is after 6:00 PM and duration is not 60 minutes
-                        if (datetime.strptime(local_start_time, "%Y-%m-%d %H:%M:%S").time() >= datetime.strptime("18:00:00", "%H:%M:%S").time() and 
+                        if (datetime.strptime(local_start_time, "%Y-%m-%d %H:%M:%S").time() >= datetime.strptime("18:00:00", "%H:%M:%S").time() and
                             slot['duration'] != 60):
                             suitable_slots.append((local_start_time, slot['duration'], slot['price']))
                     if suitable_slots:
                         for slot in suitable_slots:
-                            all_results[current_date].append([venue['name'], court_name, slot[0], slot[1], slot[2]])
+                            results.append([venue['name'], court_name, slot[0], slot[1], slot[2]])
         else:
             print(f'Error: {response.status_code}')
+    return results
 
-# Print the results for each date in a table format
-for date, results in all_results.items():
-    if results:
-        # Add weekday to the header
-        weekday = date.strftime("%A")
-        headers = ["Venue", "Court", "Start Time", "Duration (minutes)", "Price (EUR)"]
-        print(f"\nAvailability for {date} ({weekday}):\n")
-        print(tabulate(results, headers=headers, tablefmt="grid"))
-    else:
-        print(f"\nNo suitable availability found for {date}.\n")
+def printToConsole(all_results):
+    # Print the results for each date in a table format
+    for date, results in all_results.items():
+        if results:
+            # Add weekday to the header
+            weekday = date.strftime("%A")
+            headers = ["Venue", "Court", "Start Time", "Duration (minutes)", "Price (EUR)"]
+            print(f"\nAvailability for {date} ({weekday}):\n")
+            print(tabulate(results, headers=headers, tablefmt="grid"))
+        else:
+            print(f"\nNo suitable availability found for {date}.\n")
+
+if __name__ == "__main__":
+    # Get today's date
+    today = datetime.now().date()
+
+    # Store the results for all dates
+    all_results = {}
+
+    # Loop through the next thirteen days
+    for i in range(14):
+        # Calculate the current date
+        current_date = today + timedelta(days=i)
+        all_results[current_date] = getAvailability(current_date)
+
+    printToConsole(all_results)
