@@ -89,16 +89,17 @@ def printToConsole(all_results):
         else:
             print(f"\nNo suitable availability found for {date}.\n")
 
-# Get today's date
-today = datetime.now().date()
+if __name__ == "__main__":
+    # Get today's date
+    today = datetime.now().date()
 
-# Store the results for all dates
-all_results = {}
+    # Store the results for all dates
+    all_results = {}
 
-# Loop through the next thirteen days
-for i in range(14):
-    # Calculate the current date
-    current_date = today + timedelta(days=i)
-    all_results[current_date] = getAvailability(current_date)
+    # Loop through the next thirteen days
+    for i in range(14):
+        # Calculate the current date
+        current_date = today + timedelta(days=i)
+        all_results[current_date] = getAvailability(current_date)
 
-printToConsole(all_results)
+    printToConsole(all_results)
