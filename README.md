@@ -14,3 +14,8 @@
 - install dependency `pip3 install ...`
 - save dependency to requirements.txt by running `pip3 freeze > requirements.txt`
 - and commit it
+
+## Deploy serverless function
+- run `npm install` to install serverless dependency
+- run `npm run deploy` to deploy
+- you probably have to authenticate via serverless and aws
