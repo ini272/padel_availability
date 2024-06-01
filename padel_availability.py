@@ -86,13 +86,16 @@ for i in range(14):
         else:
             print(f'Error: {response.status_code}')
 
-# Print the results for each date in a table format
-for date, results in all_results.items():
-    if results:
-        # Add weekday to the header
-        weekday = date.strftime("%A")
-        headers = ["Venue", "Court", "Start Time", "Duration (minutes)", "Price (EUR)"]
-        print(f"\nAvailability for {date} ({weekday}):\n")
-        print(tabulate(results, headers=headers, tablefmt="grid"))
-    else:
-        print(f"\nNo suitable availability found for {date}.\n")
+def printToConsole(all_results):
+    # Print the results for each date in a table format
+    for date, results in all_results.items():
+        if results:
+            # Add weekday to the header
+            weekday = date.strftime("%A")
+            headers = ["Venue", "Court", "Start Time", "Duration (minutes)", "Price (EUR)"]
+            print(f"\nAvailability for {date} ({weekday}):\n")
+            print(tabulate(results, headers=headers, tablefmt="grid"))
+        else:
+            print(f"\nNo suitable availability found for {date}.\n")
+
+printToConsole(all_results)
