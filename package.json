@@ -1,0 +1,17 @@
+{
+  "name": "padel_availability",
+  "version": "1.0.0",
+  "description": "## How to install - install virtualenv `pip3 install virtualenv --break-system-packages` - create envrionment `python3 -m venv env` - activate envrionment `source env/bin/activate`     - you should now see a \"(env)\" in your command line     - for later deactivating the environment run `deactivate` - install dependencies `pip3 install -r requirements.txt`",
+  "main": "index.js",
+  "scripts": {
+    "deploy": "serverless deploy"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "serverless": "^3"
+  },
+  "devDependencies": {
+    "serverless-python-requirements": "^6.1.0"
+  }
+}
