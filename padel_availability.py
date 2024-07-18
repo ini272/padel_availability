@@ -1,7 +1,8 @@
-import requests
 import json
 from datetime import datetime, timedelta
+
 import pytz
+import requests
 from tabulate import tabulate
 
 # Load court IDs and venue information from the JSON file
