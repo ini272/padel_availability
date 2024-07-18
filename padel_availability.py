@@ -5,15 +5,16 @@ import pytz
 from tabulate import tabulate
 
 # Load court IDs and venue information from the JSON file
-with open('court_ids.json', 'r') as file:
+with open("court_ids.json", "r") as file:
     venues_data = json.load(file)
 
 # Define the URL
-url = 'https://playtomic.io/api/v1/availability'
+url = "https://playtomic.io/api/v1/availability"
 
 # Define the time zones
 utc_tz = pytz.utc
-local_tz = pytz.timezone('Europe/Berlin')  # GMT+1 with daylight saving
+local_tz = pytz.timezone("Europe/Berlin")  # GMT+1 with daylight saving
+
 
 # Function to convert time
 def convert_time(date_str, time_str):
@@ -26,6 +27,7 @@ def convert_time(date_str, time_str):
     # Convert to local time
     local_time = utc_time.astimezone(local_tz)
     return local_time.strftime("%Y-%m-%d %H:%M:%S")
+
 
 # Get today's date
 today = datetime.now().date()
@@ -46,17 +48,17 @@ for i in range(14):
     all_results[current_date] = []
 
     # Loop through each venue
-    for venue in venues_data['venues']:
-        tenant_id = venue['tenant_id']
-        court_names = venue['court_names']
+    for venue in venues_data["venues"]:
+        tenant_id = venue["tenant_id"]
+        court_names = venue["court_names"]
 
         # Set the parameters
         params = {
-            'user_id': 'me',
-            'tenant_id': tenant_id,
-            'sport_id': 'PADEL',
-            'local_start_min': start_time,
-            'local_start_max': end_time
+            "user_id": "me",
+            "tenant_id": tenant_id,
+            "sport_id": "PADEL",
+            "local_start_min": start_time,
+            "local_start_max": end_time,
         }
 
         # Perform the GET request
@@ -67,24 +69,45 @@ for i in range(14):
             availability = response.json()
 
             # Sort courts by their order
-            sorted_courts = sorted(availability, key=lambda x: list(court_names.values()).index(x['resource_id']) if x['resource_id'] in court_names.values() else float('inf'))
+            sorted_courts = sorted(
+                availability,
+                key=lambda x: (
+                    list(court_names.values()).index(x["resource_id"])
+                    if x["resource_id"] in court_names.values()
+                    else float("inf")
+                ),
+            )
 
             for court in sorted_courts:
-                court_id = court['resource_id']
-                court_name = next((name for name, cid in court_names.items() if cid == court_id), court_id)
+                court_id = court["resource_id"]
+                court_name = next(
+                    (name for name, cid in court_names.items() if cid == court_id),
+                    court_id,
+                )
                 if "Single court" not in court_name:
                     suitable_slots = []
-                    for slot in court['slots']:
-                        local_start_time = convert_time(court['start_date'], slot['start_time'])
+                    for slot in court["slots"]:
+                        local_start_time = convert_time(
+                            court["start_date"], slot["start_time"]
+                        )
                         # Check if start time is after 6:00 PM and duration is not 60 minutes
-                        if (datetime.strptime(local_start_time, "%Y-%m-%d %H:%M:%S").time() >= datetime.strptime("18:00:00", "%H:%M:%S").time() and 
-                            slot['duration'] != 60):
-                            suitable_slots.append((local_start_time, slot['duration'], slot['price']))
+                        if (
+                            datetime.strptime(
+                                local_start_time, "%Y-%m-%d %H:%M:%S"
+                            ).time()
+                            >= datetime.strptime("18:00:00", "%H:%M:%S").time()
+                            and slot["duration"] != 60
+                        ):
+                            suitable_slots.append(
+                                (local_start_time, slot["duration"], slot["price"])
+                            )
                     if suitable_slots:
                         for slot in suitable_slots:
-                            all_results[current_date].append([venue['name'], court_name, slot[0], slot[1], slot[2]])
+                            all_results[current_date].append(
+                                [venue["name"], court_name, slot[0], slot[1], slot[2]]
+                            )
         else:
-            print(f'Error: {response.status_code}')
+            print(f"Error: {response.status_code}")
 
 # Print the results for each date in a table format
 for date, results in all_results.items():
