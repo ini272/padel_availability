@@ -57,6 +57,3 @@ def home():
             render_data.append((date, date.strftime("%A"), "No suitable availability found."))
 
     return render_template('index.html', data=render_data)
-
-if __name__ == "__main__":
-    app.run(debug=True)
