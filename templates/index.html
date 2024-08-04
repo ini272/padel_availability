@@ -1,0 +1,72 @@
+
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Padel Court Availability</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+  <script>
+    function filterTables() {
+      var weekdayCheckbox = document.getElementById("weekday");
+      var weekendCheckbox = document.getElementById("weekend");
+      var selectedDate = document.querySelector(".calendar .selected");
+      var selectedDateValue = selectedDate ? selectedDate.getAttribute("data-date") : null;
+
+      var weekdayDays = ["Monday", "Tuesday", "Wednesday", "Thursday"];
+      var weekendDays = ["Friday", "Saturday", "Sunday"];
+
+      var tables = document.querySelectorAll(".availability-table");
+      tables.forEach(function(table) {
+        var day = table.getAttribute("data-day");
+        var date = table.getAttribute("data-date");
+        var display = false;
+
+        if (selectedDateValue && selectedDateValue !== date) {
+          display = false;
+        } else if (weekdayCheckbox.checked && weekdayDays.includes(day)) {
+          display = true;
+        } else if (weekendCheckbox.checked && weekendDays.includes(day)) {
+          display = true;
+        } else {
+          display = false;
+        }
+
+        table.style.display = display ? "" : "none";
+      });
+    }
+
+    function selectDate(element) {
+      if (element.classList.contains("selected")) {
+        element.classList.remove("selected");
+      } else {
+        var calendarDays = document.querySelectorAll(".calendar div");
+        calendarDays.forEach(function(day) {
+          day.classList.remove("selected");
+        });
+        element.classList.add("selected");
+      }
+      filterTables();
+    }
+  </script>
+</head>
+<body>
+  <div class="container">
+    <h1>Padel Court Availability</h1>
+    <div class="filters">
+      <label><input type="checkbox" id="weekday" onclick="filterTables()" checked> Weekdays (Mon-Thu)</label>
+      <label><input type="checkbox" id="weekend" onclick="filterTables()" checked> Weekends (Fri-Sun)</label>
+    </div>
+    <div class="calendar">
+      {% for date, weekday, _ in data %}
+        <div data-date="{{ date }}" onclick="selectDate(this)">{{ date }}<br>{{ weekday }}</div>
+      {% endfor %}
+    </div>
+    {% for date, weekday, table in data %}
+      <div class="availability-table" data-date="{{ date }}" data-day="{{ weekday }}">
+        <h2>{{ date }} - {{ weekday }}</h2>
+        {{ table|safe }}
+      </div>
+    {% endfor %}
+  </div>
+</body>
+</html>

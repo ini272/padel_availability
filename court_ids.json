@@ -2,6 +2,7 @@
     "venues": [
         {
             "name": "Padel FC",
+            "overview_name": "padel-fc",
             "tenant_id": "0220b0b5-c27a-4433-9c91-1798aaec5250",
             "court_names": {
                 "Court 1": "eb3c33f1-8c59-4330-88dc-1f195745c6de",
@@ -17,6 +18,7 @@
         },
         {
             "name": "Beach Mitte",
+            "overview_name": "beachmitte",
             "tenant_id": "aa7e1831-a90d-4a4f-b6ae-f6d334179907",
             "court_names": {
                 "Court 1": "9d599f54-5965-4dd9-ae33-bef0be6401d8",
@@ -25,6 +27,7 @@
         },
         {
             "name": "Padel Berlin",
+            "overview_name": "tenant",
             "tenant_id": "6adc7add-0547-4f48-830e-153f9aa5948d",
             "court_names": {
                 "Indoor": "8abdc01f-a27a-4297-8f24-2257304a567a",
